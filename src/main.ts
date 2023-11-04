@@ -11,7 +11,15 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true,
   });
-  app.enableCors({ origin: ['*'], methods: ['GET', 'POST', 'DELETE', 'PUT'] });
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'https://localhost:3000',
+      'https://tof-nextjs-production.up.railway.app',
+      'http://tof-nextjs-production.up.railway.app',
+    ],
+    methods: ['GET', 'POST', 'DELETE', 'PUT'],
+  });
   await app.listen(8080);
 }
 bootstrap();
