@@ -9,7 +9,7 @@ export class User {
   id?: number;
 
   @Column({ length: 500, nullable: false })
-  name: string;
+  display_name: string;
 
   @Column({ length: 20, unique: true, nullable: false })
   username: string;
