@@ -6,9 +6,25 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
-
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksModule } from './tasks/tasks.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { RolesGuard } from './role/role.guard';
+import { AuthGuard } from './auth/auth.guard';
 @Module({
   imports: [
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.MAILER_HOST,
+        port: process.env.MAILER_PORT,
+        secure: false,
+        auth: {
+          user: process.env.MAILER_EMAIL,
+          pass: process.env.MAILER_PASSWORD,
+        },
+      },
+    }),
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       envFilePath: '.env',
     }),
@@ -25,8 +41,9 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    TasksModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { useClass: RolesGuard, provide: AuthGuard }],
 })
 export class AppModule {}

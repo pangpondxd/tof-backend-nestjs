@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as CryptoJS from 'crypto-js';
+import { Role } from 'src/enums/role.enum';
 @Injectable()
 export class UsersService {
   constructor(
@@ -19,7 +20,12 @@ export class UsersService {
       JSON.stringify(createUserDto.password),
       process.env.PASSWORD_SECRET,
     ).toString();
-    const payload: User = { ...createUserDto, updated_at, password };
+    const payload: User = {
+      ...createUserDto,
+      updated_at,
+      password,
+      role: Role.User,
+    };
     return await this.userRepository.save(payload);
   }
 
