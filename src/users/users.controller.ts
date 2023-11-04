@@ -14,6 +14,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Role } from 'src/enums/role.enum';
 import { Roles } from 'src/decorators/roles.decorator';
+import { FindOneOptions } from 'typeorm';
 
 @Controller('users')
 export class UsersController {
@@ -35,9 +36,9 @@ export class UsersController {
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
-
-  findByUsername(username: string) {
-    return this.usersService.find(username);
+  @Get('user')
+  find(@Body() options: FindOneOptions) {
+    return this.usersService.find(options);
   }
 
   @Patch(':id')

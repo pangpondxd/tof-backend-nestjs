@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as CryptoJS from 'crypto-js';
 import { Role } from 'src/enums/role.enum';
@@ -68,12 +68,8 @@ export class UsersService {
     return `This action returns a #${id} user`;
   }
 
-  find(username: string) {
-    const userData = this.userRepository.findOne({
-      select: ['id', 'username', 'password'],
-      where: { username },
-    });
-    return userData;
+  find(options: FindOneOptions) {
+    return this.userRepository.findOne(options);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
