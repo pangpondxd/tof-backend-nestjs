@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
+import { Role } from 'src/enums/role.enum';
 
 export class CreateUserDto {
   id: number;
@@ -28,4 +29,10 @@ export class CreateUserDto {
   updated_at: Date;
 
   created_at: Date;
+
+  role: Role;
+
+  token: string;
+
+  refresh_token: string;
 }

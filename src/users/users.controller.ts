@@ -12,6 +12,9 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Role } from 'src/enums/role.enum';
+import { Roles } from 'src/decorators/roles.decorator';
+import { FindOneOptions } from 'typeorm';
 
 @Controller('users')
 export class UsersController {
@@ -22,6 +25,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @Roles(Role.Admin)
   @UseGuards(AuthGuard)
   @Get()
   findAll() {
@@ -32,9 +36,9 @@ export class UsersController {
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
-
-  findByUsername(username: string) {
-    return this.usersService.find(username);
+  @Get('user')
+  find(@Body() options: FindOneOptions) {
+    return this.usersService.find(options);
   }
 
   @Patch(':id')
