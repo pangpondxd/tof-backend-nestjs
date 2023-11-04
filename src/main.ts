@@ -12,15 +12,7 @@ async function bootstrap() {
     new FastifyAdapter({ logger: true }),
   );
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:8080',
-      'https://tof-nextjs-production.up.railway.app',
-      'https://tof-backend-nestjs-production.up.railway.app',
-    ],
-    methods: ['POST', 'PUT', 'DELETE', 'GET'],
-  });
+  app.enableCors();
   await app.listen(8080);
 }
 bootstrap();
