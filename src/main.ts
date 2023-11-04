@@ -6,13 +6,29 @@ import {
 } from '@nestjs/platform-fastify';
 import { ValidationPipe } from '@nestjs/common';
 
+const CORS_OPTIONS = {
+  origin: ['*'], // or '*' or whatever is required
+  allowedHeaders: [
+    'Access-Control-Allow-Origin',
+    'Origin',
+    'X-Requested-With',
+    'Accept',
+    'Content-Type',
+    'Authorization',
+  ],
+  exposedHeaders: 'Authorization',
+  credentials: true,
+  methods: ['GET', 'PUT', 'OPTIONS', 'POST', 'DELETE'],
+};
+
 async function bootstrap() {
+  const adapter = new FastifyAdapter();
+  adapter.enableCors(CORS_OPTIONS);
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({ logger: true }),
+    adapter,
   );
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors();
   await app.listen(8080);
 }
 bootstrap();
