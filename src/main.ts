@@ -5,21 +5,20 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { ValidationPipe } from '@nestjs/common';
+import * as cors from 'cors';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter({ logger: true }),
-  );
-  app.useGlobalPipes(new ValidationPipe());
+  const app = await NestFactory.create(AppModule, {
+    cors: true,
+  });
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'http://localhost:8080',
-      'http://tof-nextjs-production.up.railway.app',
+      'https://localhost:3000',
       'https://tof-nextjs-production.up.railway.app',
+      'http://tof-nextjs-production.up.railway.app',
     ],
-    methods: ['POST', 'PUT', 'DELETE', 'GET'],
+    methods: ['GET', 'POST', 'DELETE', 'PUT'],
   });
   await app.listen(process.env.PORT);
 }
