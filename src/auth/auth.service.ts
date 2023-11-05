@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { SignInDto } from './dto/sign-in.dto';
 import * as CryptoJS from 'crypto-js';
@@ -20,6 +25,13 @@ export class AuthService {
       where: { username },
       select: ['password', 'username', 'id'],
     });
+    if (!user) {
+      throw new HttpException(
+        'ชื่อบัญชีหรือรหัสผ่านไม่ถูกต้อง',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const bytes = CryptoJS.AES.decrypt(
       user.password,
       process.env.PASSWORD_SECRET,
@@ -27,7 +39,10 @@ export class AuthService {
     const originalText = bytes.toString(CryptoJS.enc.Utf8);
 
     if (password !== JSON.parse(originalText)) {
-      throw new UnauthorizedException();
+      throw new HttpException(
+        'ชื่อบัญชีหรือรหัสผ่านไม่ถูกต้อง',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const payload = { sub: user.id, username: user.username };
     const token = await this.jwtService.signAsync(payload);
@@ -35,10 +50,6 @@ export class AuthService {
     return {
       access_token: token,
     };
-    // const { password, ...result } = user;
-    // TODO: Generate a JWT and return it here
-    // instead of the user object
-    // return result;
   }
 
   async signOut({ id }: { id: number }) {
