@@ -11,6 +11,8 @@ import { TasksModule } from './tasks/tasks.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { RolesGuard } from './role/role.guard';
 import { AuthGuard } from './auth/auth.guard';
+import { QuestsModule } from './quests/quests.module';
+import { Quest } from './quests/entities/quest.entity';
 
 @Module({
   imports: [
@@ -36,13 +38,14 @@ import { AuthGuard } from './auth/auth.guard';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE,
-      entities: [User],
+      entities: [User, Quest],
       synchronize: true,
       autoLoadEntities: true,
     }),
     UsersModule,
     AuthModule,
     TasksModule,
+    QuestsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { useClass: RolesGuard, provide: AuthGuard }],
