@@ -22,7 +22,6 @@ export class UsersController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    console.log('createUserDto', createUserDto);
     return this.usersService.create(createUserDto);
   }
 
@@ -37,6 +36,7 @@ export class UsersController {
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
+
   @Get('user')
   find(@Body() options: FindOneOptions) {
     return this.usersService.find(options);

@@ -36,7 +36,7 @@ export class UsersService {
     });
     if (existingUsername) {
       throw new HttpException(
-        'Username number already exists',
+        'Username already exists',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -44,10 +44,7 @@ export class UsersService {
       where: { email },
     });
     if (existingEmail) {
-      throw new HttpException(
-        'Email number already exists',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Email already exists', HttpStatus.BAD_REQUEST);
     }
     const existingPhone = await this.userRepository.findOne({
       where: { phone },
