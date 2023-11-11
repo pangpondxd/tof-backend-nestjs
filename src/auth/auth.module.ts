@@ -9,12 +9,12 @@ import { User } from 'src/users/entities/user.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    UsersModule,
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '86400s' },
     }),
+    UsersModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

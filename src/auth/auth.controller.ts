@@ -6,10 +6,14 @@ import {
   HttpStatus,
   Param,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { UsersService } from 'src/users/users.service';
+import { Request } from 'express';
+import { AuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,8 +32,16 @@ export class AuthController {
     return this.authService.signOut({ id });
   }
 
-  @Get('user')
-  getUserByToken(@Body() { access_token }: { access_token: string }) {
-    return this.usersService.find({ where: { token: access_token } });
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  getProfile(@Req() request: Request) {
+    if (request.cookies.token) {
+      const token = request.cookies.token;
+      return this.usersService.find({
+        where: {
+          token,
+        },
+      });
+    }
   }
 }
