@@ -14,7 +14,7 @@ async function bootstrap() {
       'http://tof-dev.up.railway.app',
       'https://tof-nextjs-production.up.railway.app',
       'https://tof-dev.up.railway.app',
-      'https://tof-nextjs.vercel.app/',
+      'https://tof-nextjs.vercel.app',
     ],
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   });
