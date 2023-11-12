@@ -10,7 +10,10 @@ async function bootstrap() {
     credentials: true,
     origin: [
       'http://localhost:3000',
+      'http://tof-nextjs-production.up.railway.app',
+      'http://tof-dev.up.railway.app',
       'https://tof-nextjs-production.up.railway.app',
+      'https://tof-dev.up.railway.app',
     ],
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   });
