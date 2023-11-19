@@ -3,7 +3,7 @@ import { Role } from 'src/enums/role.enum';
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity()
-@Unique(['id', 'username', 'email', 'phone'])
+@Unique(['id', 'name', 'email', 'phone'])
 export class User {
   @PrimaryGeneratedColumn()
   id?: number;
@@ -20,11 +20,8 @@ export class User {
   @Column({ length: 100, unique: true, nullable: false })
   email: string;
 
-  @Column({ length: 100, nullable: false })
-  first_name: string;
-
-  @Column({ length: 100, nullable: false })
-  last_name: string;
+  @Column({ length: 300, nullable: false })
+  name: string;
 
   @Column({ length: 10, unique: true, nullable: false })
   phone: string;

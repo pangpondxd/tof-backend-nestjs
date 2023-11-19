@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  forwardRef,
+  Inject,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,14 +17,31 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { Role } from 'src/enums/role.enum';
 import { Roles } from 'src/decorators/roles.decorator';
 import { FindOneOptions } from 'typeorm';
+import { AuthService } from 'src/auth/auth.service';
+import * as CryptoJS from 'crypto-js';
 
 @Controller('user')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    @Inject(forwardRef(() => UsersService))
+    private usersService: UsersService,
+    private authService: AuthService,
+  ) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    const user = await this.usersService.create(createUserDto);
+
+    const token = await this.authService.signIn({
+      username: user?.username,
+      password: JSON.parse(
+        CryptoJS.AES.decrypt(
+          user.password,
+          process.env.PASSWORD_SECRET,
+        ).toString(CryptoJS.enc.Utf8),
+      ),
+    });
+    return { ...user, token };
   }
 
   @Roles(Role.Admin)

@@ -4,20 +4,21 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Param,
   Post,
-  Req,
   UseGuards,
+  forwardRef,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { UsersService } from 'src/users/users.service';
-import { Request } from 'express';
 import { AuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(
+    @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private readonly authService: AuthService,
   ) {}
@@ -34,14 +35,11 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  getProfile(@Req() request: Request) {
-    if (request.cookies.token) {
-      const token = request.cookies.token;
-      return this.usersService.find({
-        where: {
-          token,
-        },
-      });
-    }
+  getProfile(@Param(':name') name: string) {
+    return this.usersService.find({
+      where: {
+        name,
+      },
+    });
   }
 }

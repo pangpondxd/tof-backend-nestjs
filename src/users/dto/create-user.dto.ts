@@ -21,10 +21,7 @@ export class CreateUserDto {
   username: string;
 
   @IsNotEmpty()
-  first_name: string;
-
-  @IsNotEmpty()
-  last_name: string;
+  name: string;
 
   updated_at: Date;
 
