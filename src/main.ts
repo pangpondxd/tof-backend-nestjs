@@ -1,16 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useLogger(['log', 'warn', 'error', 'verbose', 'debug', 'fatal']);
   app.enableCors({
-    allowedHeaders: [
-      'content-type',
-      'X-Frame-Options',
-      'Access-Control-Allow-Credentials',
-    ],
+    allowedHeaders: ['content-type', 'X-Frame-Options'],
     credentials: true,
     origin: [
       'http://localhost:3000',
@@ -23,6 +20,14 @@ async function bootstrap() {
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   });
   app.use(cookieParser());
+  app.use(
+    session({
+      secret: process.env.JWT_CONSTANT,
+      resave: false,
+      saveUninitialized: false,
+      secure: true,
+    }),
+  );
   await app.listen(process.env.PORT);
 }
 bootstrap();

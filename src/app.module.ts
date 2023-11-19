@@ -13,6 +13,7 @@ import { RolesGuard } from './role/role.guard';
 import { AuthGuard } from './auth/auth.guard';
 import { QuestsModule } from './quests/quests.module';
 import { Quest } from './quests/entities/quest.entity';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { Quest } from './quests/entities/quest.entity';
     AuthModule,
     TasksModule,
     QuestsModule,
+    SharedModule,
   ],
   controllers: [AppController],
   providers: [AppService, { useClass: RolesGuard, provide: AuthGuard }],

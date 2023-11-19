@@ -1,21 +1,27 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
-import { SignInDto } from './dto/sign-in.dto';
-import * as CryptoJS from 'crypto-js';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { SignInDto } from 'src/auth/dto/sign-in.dto';
 import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
-import { Response } from 'express';
 
 @Injectable()
-export class AuthService {
+export class SharedService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
+
   async signIn({ username, password }: SignInDto): Promise<any> {
     const user = await this.usersService.find({
       where: { username },
